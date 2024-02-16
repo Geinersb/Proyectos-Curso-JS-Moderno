@@ -27,10 +27,10 @@ function agregarCurso(e) {
 
 //LEE EL CONTENIDO DEL HTML AL QUE DIMOS CLICK 
 function leerDatosCurso(curso) {
-   // console.log(curso);
+    // console.log(curso);
 
     //crear un objeto con el contenido del curso actual seleccionado
-    const infoCurso ={
+    const infoCurso = {
         imagen: curso.querySelector('img').src,
         titulo: curso.querySelector('h4').textContent,
         precio: curso.querySelector('.precio span').textContent,
@@ -48,17 +48,36 @@ function leerDatosCurso(curso) {
 }
 
 //MUESTRA EL CARRITO DE COMPRAS EN HTML
-function carritoHTML(){
+function carritoHTML() {
 
-//LIMPIAR EL HTML
-limpiarHTML();
+    //LIMPIAR EL HTML
+    limpiarHTML();
 
-//RECORRE EL CARRITO Y GENERA EL HTML 
-    articulosCarrito.forEach( (curso) =>{
+    //RECORRE EL CARRITO Y GENERA EL HTML 
+    articulosCarrito.forEach((curso) => {
+        const{imagen,titulo,precio,cantidad,id}= curso;
+
+
         const row = document.createElement('tr');
-        row.innerHTML= `
+        row.innerHTML = `
         <td>
-            ${curso.titulo}
+                <img src="${imagen}" width="100">
+        </td>
+
+        <td>
+            ${titulo}
+        </td>
+
+        <td>
+            ${precio}
+        </td>
+        
+        <td>
+            ${cantidad}
+        </td>
+
+        <td>
+          <a href="" class="borrar-curso" data-id="${id}"> X </a>
         </td>
         `;
 
@@ -68,11 +87,11 @@ limpiarHTML();
 }
 
 //ELIMINA LOS CURSOS DEL TBODY
-function limpiarHTML(){
+function limpiarHTML() {
     //forma lenta para limpiar
-   // contenedorCarrito.innerHTML = '';
+    // contenedorCarrito.innerHTML = '';
 
-   while(contenedorCarrito.firstChild){
-    contenedorCarrito.removeChild(contenedorCarrito.firstChild);
-   }
+    while (contenedorCarrito.firstChild) {
+        contenedorCarrito.removeChild(contenedorCarrito.firstChild);
+    }
 }
