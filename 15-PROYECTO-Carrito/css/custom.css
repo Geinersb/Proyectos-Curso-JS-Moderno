@@ -180,3 +180,25 @@ display: block;
 margin-bottom: 10px;
 text-decoration: none;
 }
+
+
+/* se agrega estilos para mostrar notificacion en carrito  */
+.notificacion-carrito {
+	visibility: hidden;
+}
+.notificacion-carrito--visible {
+	visibility: visible;
+}
+.notificacion-carrito::before {
+	content: attr(data-cantidadnotificacion);
+	position: absolute;
+	top: -1rem;
+	left: 22px;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: #eb4545;
+	color: white;
+	text-align: center;
+	line-height: 20px;
+}
