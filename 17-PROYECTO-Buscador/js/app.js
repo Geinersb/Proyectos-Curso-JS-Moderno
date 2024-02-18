@@ -27,7 +27,7 @@ const datosBusqueda = {
 
 /////EVENTOS
 document.addEventListener('DOMContentLoaded', () => {
-    mostrarAutos(); //muestra los autos al cargar pagina
+    mostrarAutos(autos); //muestra los autos al cargar pagina
 
     //llena las opciones de años
     llenarSelect();
@@ -35,11 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //EVENT LISTENER PARA LOS SELECT DE BUSQUEDA
 marca.addEventListener('change',(e)=>{
-    datosBusqueda.marca = e.target.value;    
+    datosBusqueda.marca = e.target.value;  
+    
+    filtrarAuto();
 });
 year.addEventListener('change',(e)=>{
     datosBusqueda.year = e.target.value;   
-  
+    filtrarAuto();
 });
 minimo.addEventListener('change',(e)=>{
     datosBusqueda.minimo = e.target.value;   
@@ -64,7 +66,10 @@ color.addEventListener('change',(e)=>{
 
 
 /////FUNCIONES
-function mostrarAutos() {
+function mostrarAutos(autos) {
+
+    limpiarHTML(); //elimina el HTML Previo
+
     autos.forEach(auto => {
         const { marca, modelo, year, puertas, transmision, precio, color } = auto;
 
@@ -80,6 +85,13 @@ function mostrarAutos() {
     });
 }
 
+//FUNCION PARA LIMPIAR HTML 
+function limpiarHTML(){
+    while (resultado.firstChild) {
+        resultado.removeChild(resultado.firstChild);
+    }
+}
+
 //GENERA LOS AÑOS DEL SELECT 
 function llenarSelect(){
 for(let i = max; i >= min; i--  ){
@@ -88,4 +100,29 @@ for(let i = max; i >= min; i--  ){
     opcion.textContent = i;
     year.appendChild(opcion); //agrega opciones del year al Select 
 }
+}
+
+//FUNCION QUE FILTRA EN BASE A LA BUSQUEDA 
+function filtrarAuto(){
+    const resultado = autos.filter(filtrarMarca).filter(filtrarYear)
+
+   // console.log(resultado)
+
+   mostrarAutos(resultado);
+}
+
+function filtrarMarca(auto){
+    if(datosBusqueda.marca){
+        return auto.marca === datosBusqueda.marca;
+    }
+
+    return auto;    
+}
+
+function filtrarYear(auto){
+    if(datosBusqueda.year){
+        return auto.year === parseInt(datosBusqueda.year);
+    }
+
+    return auto;
 }
