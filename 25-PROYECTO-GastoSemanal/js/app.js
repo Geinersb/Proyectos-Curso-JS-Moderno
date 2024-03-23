@@ -21,9 +21,17 @@ class Presupuesto {
         this.gastos = [];
     }
 
-    nuevoGasto(gasto){
-        this.gastos = [...this.gastos,gasto];
-        console.log(this.gastos)
+    nuevoGasto(gasto) {
+        this.gastos = [...this.gastos, gasto];
+        this.calcularRestante();
+
+    }
+
+    calcularRestante(){
+        const gastado = this.gastos.reduce((total, gasto)=> total + gasto.cantidad, 0 );
+        this.restante = this.presupuesto - gastado;
+       
+       
     }
 }
 
@@ -41,9 +49,9 @@ class UI {
         const divMensaje = document.createElement('div');
         divMensaje.classList.add('text-center', 'alert');
 
-        if(tipo === 'error'){
+        if (tipo === 'error') {
             divMensaje.classList.add('alert-danger');
-        }else{
+        } else {
             divMensaje.classList.add('alert-success');
         }
 
@@ -51,7 +59,7 @@ class UI {
         divMensaje.textContent = mensaje;
 
         //INSERTAR EN EL HTML 
-        document.querySelector('.primario').insertBefore(divMensaje,formulario);
+        document.querySelector('.primario').insertBefore(divMensaje, formulario);
 
         //QUITAR DEL HTML 
         setTimeout(() => {
@@ -59,22 +67,42 @@ class UI {
         }, 3000);
     }
 
-    agregarGastoListado(gastos){
+    agregarGastoListado(gastos) {
+
+        this.limpiarHTML(); //ELIMINA EL HTML PREVIO 
 
         //ITERAR SOBRE LOS GASTOS 
         gastos.forEach(gasto => {
-                const {cantidad,nombre,id}= gasto;
+            const { cantidad, nombre, id } = gasto;
 
-                //CREAR UN LI 
+            //CREAR UN LI 
+            const nuevoGasto = document.createElement('li');
+            nuevoGasto.className = 'list-group-item d-flex justify-content-between align-items-center ';
+            nuevoGasto.dataset.id = id;
+          
 
+            ///AGREGAR EL HTML DEL GASTO 
+            nuevoGasto.innerHTML =  `${nombre} <span class="badge badge-primary badge-pill"> $ ${cantidad} </span> `
 
-                ///AGREGAR EL HTML DEL GASTO 
+            //BOTON PARA BORRAR EL GASTO 
+                const btnBorrar = document.createElement('button');
+                btnBorrar.classList.add('btn','btn-danger','borrar-gasto');
+            btnBorrar.innerHTML = 'Borrar &times;'
+                nuevoGasto.appendChild(btnBorrar);
 
-
-                //BOTON PARA BORRAR EL GASTO 
-
-                //AGREGAR AL HTML 
+            //AGREGAR AL HTML 
+            gastoListado.appendChild(nuevoGasto);
         });
+    }
+
+    limpiarHTML(){
+        while(gastoListado.firstChild){
+            gastoListado.removeChild(gastoListado.firstChild);
+        }
+    }
+
+    actualizarRestante(restante){
+        document.querySelector('#restante').textContent = restante;
     }
 }
 
@@ -106,33 +134,35 @@ function agregarGasto(e) {
 
     //Leer los datos del formulario
     const nombre = document.querySelector('#gasto').value;
-    const cantidad =Number(document.querySelector('#cantidad').value);
+    const cantidad = Number(document.querySelector('#cantidad').value);
 
     //Validar 
     if (nombre === '' || cantidad === '') {
-        ui.imprimirAlerta('Ambos campos son obligatorios','error');
+        ui.imprimirAlerta('Ambos campos son obligatorios', 'error');
         return;
-    } else if(cantidad <=0 || isNaN(cantidad)){
-        
-        ui.imprimirAlerta('Cantidad no valida','error');
+    } else if (cantidad <= 0 || isNaN(cantidad)) {
+
+        ui.imprimirAlerta('Cantidad no valida', 'error');
         return;
     }
 
     //GENERAR UN OBJETO CON EL GASTO 
-    const gasto = { nombre, cantidad, id:Date.now() }
+    const gasto = { nombre, cantidad, id: Date.now() }
 
     //AGREGA UN NUEVO GASTO 
     presupuesto.nuevoGasto(gasto);
 
     //MENSAJE DE GASTRO AGREGADO CORRECTAMENTE 
-    ui.imprimirAlerta('Gasto Agregado','OK');
+    ui.imprimirAlerta('Gasto Agregado', 'OK');
 
     //IMPRMIR LOS GASTOS 
-    const {gastos} = presupuesto;
-        ui.agregarGastoListado(gastos);
+    const { gastos, restante } = presupuesto;
+    ui.agregarGastoListado(gastos);
+
+    ui.actualizarRestante(restante);
 
     //REINICIA EL FORMULARIO 
     formulario.reset();
 
-   
+
 }
