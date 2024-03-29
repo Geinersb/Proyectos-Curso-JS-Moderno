@@ -7,13 +7,17 @@ const fechaInput = document.querySelector('#fecha');
 const sintomasInput = document.querySelector('#sintomas');
 
 const formulario = document.querySelector('#formulario-cita');
-
+const formularioInput = document.querySelector('#formulario-cita input[type="submit"]');
 const contenedorCitas = document.querySelector('#citas');
+
+let editando = false;
+
 
 
 //OBJETO DE CITA
 
 const citaObj = {
+    id: generarId(),
     paciente: '',
     propietario: '',
     email: '',
@@ -67,11 +71,28 @@ class AdminCitas {
         this.mostrar();
     }
 
+    editar(citaActualizada){
+        this.citas = this.citas.map(cita => cita.id === citaActualizada.id ? citaActualizada : cita);
+        this.mostrar();
+    }
+
+    eliminar(id){
+        this.citas = this.citas.filter(cita => cita.id !== id);
+        this.mostrar();
+    }
+
+
     mostrar() {
 
         //LIMPIAR EL HTML 
         while (contenedorCitas.firstChild) {
             contenedorCitas.removeChild(contenedorCitas.firstChild)
+        }
+
+        //SI HAY CITAS 
+        if(this.citas.length ===0){
+            contenedorCitas.innerHTML = '<p class="text-xl mt-5 mb-10 text-center">No Hay Pacientes</p>'
+            return
         }
 
         //GENERANDO LAS CITAS 
@@ -102,13 +123,23 @@ class AdminCitas {
 
             //BOTONES DE ELIMINAR Y EDITAR 
             const btnEditar = document.createElement('button');
-            btnEditar.classList.add('py-2', 'px-10', 'bg-indigo-600', 'hover:bg-indigo-700', 'text-white', 'font-bold', 'uppercase', 'rounded-lg', 'flex', 'items-center', 'gap-2');
+            btnEditar.classList.add('py-2', 'px-10', 'bg-indigo-600', 'hover:bg-indigo-700', 'text-white', 'font-bold', 'uppercase', 'rounded-lg', 'flex', 'items-center', 'gap-2','btn-editar');
 
             btnEditar.innerHTML = 'Editar <svg fill="none" class="h-5 w-5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>'
+           
+            //con esto toma una copia completa del objeto 
+            const clone = {...cita};
+            btnEditar.onclick = ()=>{
+                cargarEdicion(clone);
+            }
+
+
 
             const btnEliminar = document.createElement('button');
-            btnEliminar.classList.add('py-2', 'px-10', 'bg-red-600', 'hover:bg-red-700', 'text-white', 'font-bold', 'uppercase', 'rounded-lg', 'flex', 'items-center', 'gap-2');
+            btnEliminar.classList.add('py-2', 'px-10', 'bg-red-600', 'hover:bg-red-700', 'text-white', 'font-bold', 'uppercase', 'rounded-lg', 'flex', 'items-center', 'gap-2','btn-eliminar');
             btnEliminar.innerHTML = 'Eliminar <svg fill="none" class="h-5 w-5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+            btnEliminar.onclick = ()=> this.eliminar(cita.id)
+            
 
             //se agrega contenedor para botones y se inserta en el html
             const contenedorBotones = document.createElement('DIV');
@@ -151,7 +182,6 @@ function datosCita(e) {
     citaObj[e.target.name] = e.target.value;
 }
 
-
 const citas = new AdminCitas();
 
 function submitCita(e) {
@@ -166,24 +196,56 @@ function submitCita(e) {
         return
     }
 
-    citas.agregar({ ...citaObj });
+    if(editando){
+        citas.editar({...citaObj})
+        new Notificacion({
+            texto: 'Actualizado correctamente',
+            tipo: 'exito'
+        })
+    }
+    else{
+        citas.agregar({ ...citaObj });
+        new Notificacion({
+            texto: 'Paciente Registrado',
+            tipo: 'exito'
+        })
+    }
+   
     //limpiar el formulario luego de agregar un registro 
     formulario.reset();
     reiniciarObjetoCita();
-    new Notificacion({
-        texto: 'Paciente Registrado',
-        tipo: 'exito'
-    })
+    formularioInput.value = 'Registrar Paciente';
+    editando = false;
+    
 }
 
 
 function reiniciarObjetoCita() {
     //reiniciar el objeto 
+    citaObj.id = generarId(),
     citaObj.paciente = '';
     citaObj.propietario = '';
     citaObj.email = '';
     citaObj.fecha = '';
     citaObj.sintomas = '';
 
+}
 
+function generarId(){
+    return Math.random().toString(36).substring(2)+ Date.now();
+}
+
+
+function cargarEdicion(cita){
+    Object.assign(citaObj,cita)
+
+    pacienteInput.value = cita.paciente;
+    propietarioInput.value = cita.propietario;
+    emailInput.value = cita.email;
+    fechaInput.value = cita.fecha;
+    sintomasInput.value = cita.sintomas;
+
+    editando = true;
+
+    formularioInput.value = 'Guardar Cambios'
 }
