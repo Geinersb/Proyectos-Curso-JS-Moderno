@@ -1,1 +1,2 @@
 Informacion desde un archivo .txt
+esto es un texto que puede venir desde cualquier lado
