@@ -1,4 +1,5 @@
 //se recomienda mas usar fetch Api, antes era ajax el que mas usaban 
+//este es un ejemplo de como traer datos de un TXT
 const cargarTxtBtn = document.querySelector('#cargarTxt');
 
 //al dar click a boton llama funcion obtener datos 
