@@ -1,17 +1,21 @@
 function iniciarApp() {
 
+    const resultado = document.querySelector('#resultado');
     const selectCategorias = document.querySelector('#categorias');
 
     if(selectCategorias){
         selectCategorias.addEventListener('change', seleccionarCategoria);
-
+        obtenerCategorias();
     }
 
+    const favoritosDiv = document.querySelector('.favoritos');
+    if(favoritosDiv){
+        obtenerFavoritos();
+    }
 
-    const resultado = document.querySelector('#resultado');
     const modal = new bootstrap.Modal('#modal',{});
 
-    obtenerCategorias();
+
 
     //obtenemos la informacion del API CON EL FETCH 
     function obtenerCategorias() {
@@ -74,8 +78,8 @@ function iniciarApp() {
             //se inserta la imagen
             const recetaImagen = document.createElement('IMG');
             recetaImagen.classList.add('card-img-top');
-            recetaImagen.alt = `Imagen de la receta ${strMeal}`;
-            recetaImagen.src = strMealThumb;
+            recetaImagen.alt = `Imagen de la receta ${strMeal ?? receta.titulo}`;
+            recetaImagen.src = strMealThumb ?? receta.img;
 
             //se crea el cuerpo 
             const recetaCardBody = document.createElement('DIV');
@@ -84,7 +88,7 @@ function iniciarApp() {
             //se crea el titulo 
             const recetaHeading = document.createElement('H3');
             recetaHeading.classList.add('card-title', 'mb-3');
-            recetaHeading.textContent = strMeal;
+            recetaHeading.textContent = strMeal ?? receta.titulo;
 
             //se crea el boton 
             const recetaButton = document.createElement('BUTTON');
@@ -93,7 +97,7 @@ function iniciarApp() {
             // recetaButton.dataset.bsTarget = "#modal";
             // recetaButton.dataset.bsToggle = "modal";
             recetaButton.onclick = function(){
-                seleccionarReceta(idMeal);
+                seleccionarReceta(idMeal ?? receta.id);
             }
 
                 //INYECTAR EN EL HTML 
@@ -234,6 +238,21 @@ function iniciarApp() {
         toast.show();
     }
 
+    function  obtenerFavoritos(){
+        const favoritos = JSON.parse(localStorage.getItem('favoritos')) ?? [];
+        console.log(favoritos);
+        if(favoritos.length){
+
+            mostrarRecetas(favoritos);
+            return
+        }
+
+        const noFavoritos = document.createElement('P');
+        noFavoritos.textContent = 'No hay favoritos aun';
+        noFavoritos.classList.add('fs-4','text-center','font-bold','mt-5');
+        favoritosDiv.appendChild(noFavoritos);
+
+    }
 
     function limpiarHTML(selector){
         while(selector.firstChild){
