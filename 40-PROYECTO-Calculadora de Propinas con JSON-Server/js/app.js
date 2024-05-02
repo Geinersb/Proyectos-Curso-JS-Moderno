@@ -343,7 +343,64 @@ function mensajePedidoVacio(){
   heading.classList.add('my-4','text-center');
   heading.textContent= 'Propina';
 
+  //RADIO BUTTON 10%
+  const radio10 = document.createElement('INPUT');
+  radio10.type = 'radio';
+  radio10.name = 'propina'; 
+  radio10.value = "10";
+  radio10.classList.add('form-check-input');
+
+  const radio10Label = document.createElement('LABEL');
+  radio10Label.textContent = '10%';
+  radio10Label.classList.add('form-check-label');
+
+  const radio10Div = document.createElement('DIV');
+  radio10Div.classList.add('form-check');
+
+  radio10Div.appendChild(radio10);
+  radio10Div.appendChild(radio10Label);
+
+   //RADIO BUTTON 13%
+   const radio13 = document.createElement('INPUT');
+   radio13.type = 'radio';
+   radio13.name = 'propina'; 
+   radio13.value = "13";
+   radio13.classList.add('form-check-input');
+ 
+   const radio13Label = document.createElement('LABEL');
+   radio13Label.textContent = '13%';
+   radio13Label.classList.add('form-check-label');
+ 
+   const radio13Div = document.createElement('DIV');
+   radio13Div.classList.add('form-check');
+ 
+   radio13Div.appendChild(radio13);
+   radio13Div.appendChild(radio13Label);
+
+     //RADIO BUTTON 25%
+     const radio25 = document.createElement('INPUT');
+     radio25.type = 'radio';
+     radio25.name = 'propina'; 
+     radio25.value = "25";
+     radio25.classList.add('form-check-input');
+   
+     const radio25Label = document.createElement('LABEL');
+     radio25Label.textContent = '25%';
+     radio25Label.classList.add('form-check-label');
+   
+     const radio25Div = document.createElement('DIV');
+     radio25Div.classList.add('form-check');
+   
+     radio25Div.appendChild(radio25);
+     radio25Div.appendChild(radio25Label);
+
+  //Agregar al DIV Principal
+
   divFormulario.appendChild(heading);
+  divFormulario.appendChild(radio10Div);
+  divFormulario.appendChild(radio13Div);
+  divFormulario.appendChild(radio25Div);
+  //Agregar al formulario 
   formulario.appendChild(divFormulario);
 
   contenido.appendChild(formulario);
