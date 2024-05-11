@@ -1,11 +1,25 @@
 {
   "clientes": [
     {
-      "nombre": "Geiner NUEVO!",
-      "email": "correo2@correo.com",
-      "telefono": "12",
-      "empresa": "12212",
-      "id": 1
+      "nombre": "Geiner",
+      "email": "geiner@correo",
+      "telefono": "60206020",
+      "empresa": "prueba",
+      "id": "b3d1"
+    },
+    {
+      "id": "eced",
+      "nombre": "Jose",
+      "email": "correo3@correo",
+      "telefono": "60602020",
+      "empresa": "prueba nueva"
+    },
+    {
+      "nombre": "Pedro",
+      "email": "pedro@correo.com",
+      "telefono": "70704040",
+      "empresa": "empresa",
+      "id": "2ca2"
     }
   ]
 }
